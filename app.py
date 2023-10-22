@@ -111,7 +111,7 @@ def main():
     st.sidebar.markdown('<a href="#vis3" class="button-style">Bornes gratuites ou payantes</a>', unsafe_allow_html=True)
     st.sidebar.markdown('<a href="#vis4" class="button-style">Quelles prises disponibles ?</a>', unsafe_allow_html=True)
     st.sidebar.markdown('<a href="#vis5" class="button-style">Ou sont implanter les bornes</a>', unsafe_allow_html=True)
-    st.sidebar.markdown('<a href="#vis6" class="button-style">Pourcentage de bornes qui offrent la recharge rapdie</a>', unsafe_allow_html=True)
+    st.sidebar.markdown('<a href="#vis6" class="button-style">Pourcentage de bornes qui offrent la recharge rapide</a>', unsafe_allow_html=True)
     st.sidebar.markdown('<a href="#vis7" class="button-style">Trouver une borne</a>', unsafe_allow_html=True)
 
 
