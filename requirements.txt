@@ -8,3 +8,6 @@ seaborn
 matplotlib
 chardet
 geopandas
+geopy
+folium
+opencage

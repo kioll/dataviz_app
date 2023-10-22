@@ -9,6 +9,9 @@ import seaborn as sns
 import chardet
 import numpy as np
 import json
+import folium
+from opencage.geocoder import OpenCageGeocode
+from streamlit_folium import folium_static
 
 # Fonction pour charger les données
 @st.cache_data
@@ -28,6 +31,23 @@ def load_data(url):
     return data
 
 
+api_key = 'a8cbe5ffb62c404784e0cb3a5b39ff81'  
+geocoder = OpenCageGeocode(api_key)
+
+def get_coordinates_from_town(town_name):
+    try:
+        # Geocode the town to get its coordinates
+        results = geocoder.geocode(town_name)
+        if results:
+            lat = results[0]['geometry']['lat']
+            lon = results[0]['geometry']['lng']
+            return lat, lon
+        else:
+            st.error("Location not found.")
+            return None, None
+    except Exception as e:
+        st.error(f"Error during geocoding: {e}")
+        return None, None
 
 
 def main():
@@ -87,7 +107,7 @@ def main():
     # Vos informations personnelles
     st.sidebar.markdown("## Mes liens")
     st.sidebar.markdown("   CUOC ENZO")
-    st.sidebar.markdown("#DATAVIZ2023")
+    st.sidebar.markdown("#datavz2023efrei")
     st.sidebar.markdown("[LinkedIn](https://www.linkedin.com/in/enzo-cuoc/)")
     st.sidebar.markdown("[GitHub](https://github.com/kioll)")
     
@@ -210,7 +230,42 @@ def main():
     # Afficher le graphique dans Streamlit
     st.plotly_chart(fig)
 
+
+##########################
+    # Section for selecting a town and displaying charging stations
+    st.subheader("Find Charging Stations in a Town")
+
+    # User input for the town name
+    town_name = st.text_input("Enter the name of the town:")
+
+    if town_name:  # Proceed only if a town name is entered
+        lat, lon = get_coordinates_from_town(town_name)
+
+        if lat and lon:
+            # Filter data for stations in the selected town
+            stations_in_town = data[data['nom_station'].str.contains(town_name, case=False, na=False)]
+
+            # Create a map centered around the selected town
+            town_map = folium.Map(location=[lat, lon], zoom_start=14)
+
+            # Add markers for each charging station in the town
+            for idx, row in stations_in_town.iterrows():
+                # Ensure the station has valid coordinate data
+                if pd.notnull(row['consolidated_latitude']) and pd.notnull(row['consolidated_longitude']):
+                    popup_text = f"Station: {row['nom_station']}"
+                    folium.Marker(
+                        location=[row['consolidated_latitude'], row['consolidated_longitude']],
+                        popup=popup_text,
+                    ).add_to(town_map)
+
+            # Display the map in Streamlit
+            folium_static(town_map)
+        else:
+            st.error("Could not find the town or retrieve its coordinates.")
     
+
+
+
     
     
    
