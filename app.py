@@ -2,13 +2,11 @@ import streamlit as st
 import pandas as pd
 import requests
 import io
+import geopandas as gpd
 import plotly.express as px
-import altair as alt
 import matplotlib.pyplot as plt
 import seaborn as sns 
 import chardet
-import numpy as np
-import json
 import folium
 from opencage.geocoder import OpenCageGeocode
 from streamlit_folium import folium_static
@@ -56,11 +54,12 @@ def main():
     st.markdown("""
         <div style='text-align:center'>
             <h1>
-                <img src='https://img.freepik.com/vecteurs-premium/modele-conception-logo-batterie-alimentation-conception-du-logo-charge-rapide-batterie_617472-123.jpg' alt='Logo' style='width:50px; vertical-align: middle;'>
-                Power Juice
+                <span>Power Juice</span>
+                <img src='https://cdn.pixabay.com/photo/2023/03/16/20/37/battery-7857481_1280.png' alt='Logo' style='width:50px; vertical-align: middle; margin-left: 10px;'>
             </h1>
         </div>
     """, unsafe_allow_html=True)
+       
 
     # Charger les données
     url = "https://static.data.gouv.fr/resources/fichier-consolide-des-bornes-de-recharge-pour-vehicules-electriques/20231022-065434/consolidation-etalab-schema-irve-statique-v-2.2.0-20231021.csv"
@@ -71,16 +70,13 @@ def main():
     data['date_mise_en_service'] = pd.to_datetime(data['date_mise_en_service'])
 
 
-    
-
-
     # Styles CSS pour les boutons
     button_css = """
     <style>
         .button-style {
             background-color: #1769FF;
             border: none;
-            color: white; /* Ici, la couleur initiale est blanche, mais sera écrasée pour les éléments <a> */
+            color: white;
             padding: 10px 20px;
             text-align: center;
             text-decoration: none;
@@ -89,14 +85,14 @@ def main():
             margin: 4px 2px;
             cursor: pointer;
             border-radius: 12px;
-            -webkit-transition: background-color 0.2s; /* Transition optionnelle pour un changement de couleur fluide */
-            transition: background-color 0.2s; /* Transition optionnelle pour un changement de couleur fluide */
+            -webkit-transition: background-color 0.2s; 
+            transition: background-color 0.2s; 
         }
 
-        /* Nouveau CSS pour cibler explicitement les éléments <a> */
+        
         a.button-style, a.button-style:link, a.button-style:visited, a.button-style:hover, a.button-style:active {
-            color: #000000; /* couleur du texte noir */
-            text-decoration: none; /* supprime le soulignement */
+            color: #000000;
+            text-decoration: none; 
         }
     </style>
     """
@@ -115,16 +111,19 @@ def main():
     st.sidebar.markdown('<a href="#vis3" class="button-style">Bornes gratuites ou payantes</a>', unsafe_allow_html=True)
     st.sidebar.markdown('<a href="#vis4" class="button-style">Quelles prises disponibles ?</a>', unsafe_allow_html=True)
     st.sidebar.markdown('<a href="#vis5" class="button-style">Ou sont implanter les bornes</a>', unsafe_allow_html=True)
-    st.sidebar.markdown('<a href="#vis6" class="button-style">Trouver une borne</a>', unsafe_allow_html=True)
-    # Séparation visuelle
+    st.sidebar.markdown('<a href="#vis6" class="button-style">Pourcentage de bornes qui offrent la recharge rapdie</a>', unsafe_allow_html=True)
+    st.sidebar.markdown('<a href="#vis7" class="button-style">Trouver une borne</a>', unsafe_allow_html=True)
+
+
+
     st.sidebar.markdown("---")
 
-    # Vos informations personnelles
+    # Mes Infos
     st.sidebar.markdown("## Mes liens")
     st.sidebar.markdown("   CUOC ENZO")
     st.sidebar.markdown("#datavz2023efrei")
     st.sidebar.markdown("[LinkedIn](https://www.linkedin.com/in/enzo-cuoc/)")
-    st.sidebar.markdown("[GitHub](https://github.com/kioll)")
+    st.sidebar.markdown("[GitHub](https://github.com/kioll/dataviz_app)")
     
     
 
@@ -135,10 +134,8 @@ def main():
      # Créer une ancre pour la Visualisation 1
     st.markdown("<a name='vis1'></a>", unsafe_allow_html=True)   
     
-    # Assurez-vous que la colonne 'année' est bien en format int ou float et non pas en format string
+    
     data['année'] = data['date_mise_en_service'].dt.year
-
-
 
     # Filtrer pour prendre seulement les données à partir de 2015
     df_filtré = data[data['année'] >= 2015]
@@ -146,11 +143,9 @@ def main():
     # Regroupement par année et comptage
     bornes_par_année = df_filtré.groupby('année').size()
   
-    
-
-
     # Calcul du cumul
     bornes_cumulées = bornes_par_année.cumsum()
+
     # Ajoutez un titre au graphique en utilisant du code HTML
     st.markdown("<div style='text-align:center'><h3>Évolution du nombre de bornes de recharge</h3></div>", unsafe_allow_html=True)
     st.line_chart(bornes_cumulées, use_container_width=True)
@@ -160,28 +155,19 @@ def main():
 ###########################################################
 
 #VIZ 2  
-    import geopandas as gpd
+   
 
     # Créer une ancre pour la Visualisation 2
     st.markdown("<a name='vis2'></a>", unsafe_allow_html=True)
 
-    
-    url = 'https://www.data.gouv.fr/fr/datasets/r/90b9341a-e1f7-4d75-a73c-bbc010c7feeb'
 
     # Charger les frontières des départements français
     france_map = gpd.read_file("departements.geojson")
-
-
-    
 
     data['departement'] = data['consolidated_code_postal'].astype(str).str[:2]
     borne_count_by_departement = data.groupby('departement').size().reset_index(name='nb_bornes')
 
     merged = france_map.set_index('code').join(borne_count_by_departement.set_index('departement'))
-
-
-
-   
 
     fig, ax = plt.subplots(1, 1, figsize=(10, 10))
     merged.plot(column='nb_bornes', ax=ax, legend=True, cmap="YlGnBu", alpha=1,edgecolor='0.8')
@@ -198,6 +184,7 @@ def main():
 
     data['gratuit'] = data['gratuit'].astype(str).str.lower()
     data['gratuit'] = data['gratuit'].map({"true": True, "false": False})
+
     # Remplacer les valeurs NaN par False dans la colonne 'gratuit'
     data['gratuit'].fillna(False, inplace=True)
 
@@ -205,18 +192,17 @@ def main():
     nb_gratuit = len(data[data['gratuit']])
     nb_payant = len(data[~data['gratuit']])
 
-    import plotly.express as px
-
+   
     # Créer un DataFrame pour la visualisation
     df_pie = pd.DataFrame({
         'Type': ['Gratuit', 'Payant'],
         'Nombre de bornes': [nb_gratuit, nb_payant]
     })
 
-    # Créer le pie chart avec Plotly
+   
     fig = px.pie(df_pie, values='Nombre de bornes', names='Type')
 
-    # Afficher le graphique avec Streamlit
+    
     st.markdown("<div style='text-align:center'><h3>Répartition des bornes gratuites et payantes</h3></div>", unsafe_allow_html=True)
     st.plotly_chart(fig)
 
@@ -224,10 +210,10 @@ def main():
 ######################################
 
 #VIZ 4 
+
+
     st.markdown("<a name='vis4'></a>", unsafe_allow_html=True)
 
-
- 
 
     # Nettoyer les valeurs des colonnes en les convertissant en booléens
     cols_to_clean = ['prise_type_ef', 'prise_type_2', 'prise_type_combo_ccs', 'prise_type_chademo']
@@ -243,7 +229,7 @@ def main():
     fig = px.bar(x=cols_to_clean, y=prise_counts, labels={'x': 'Type de prise', 'y': 'Nombre de prises'},
                 )
 
-    # Afficher le graphique dans Streamlit
+    
     st.markdown("<div style='text-align:center'><h3>Comparaison des types de prises sur les bornes</h3></div>", unsafe_allow_html=True)
     st.plotly_chart(fig)
 
@@ -251,50 +237,78 @@ def main():
 ##########################
 #VIZ 5 
 
-    
+    # Créer une ancre pour la Visualisation 5
+    st.markdown("<a name='vis5'></a>", unsafe_allow_html=True)  
 
-    # Création du graphique en utilisant seaborn
-    plt.figure(figsize=(10, 6))  # Vous pouvez ajuster la taille comme vous le souhaitez
-    sns.countplot(x='implantation_station', data=data, palette='viridis')  # Vous pouvez choisir une autre palette de couleurs
+    plt.figure(figsize=(10, 6))  
+    sns.countplot(x='implantation_station', data=data, palette='viridis')  
 
     
     plt.xlabel('Type d\'Implantation')
     plt.ylabel('Nombre de Stations')
+    plt.xticks(rotation=90)  
 
-    # Pour améliorer l'affichage et éviter le chevauchement des noms de catégories (si nécessaire)
-    plt.xticks(rotation=45)  
-
-    # Affichage du graphique dans Streamlit
-    st.markdown("<div style='text-align:center'><h3>Comparaison des types de prises sur les bornes</h3></div>", unsafe_allow_html=True)
+   
+    st.markdown("<div style='text-align:center'><h3>Différents types d'implantation</h3></div>", unsafe_allow_html=True)
     st.pyplot(plt)
 
 
-
-
 ##########################
-#VIZ 6
+#VIZ 6 
 
     # Créer une ancre pour la Visualisation 6
     st.markdown("<a name='vis6'></a>", unsafe_allow_html=True)   
 
+    # Calculer le nombre total de stations
+    total_stations = len(data)
+
+    # Filtrer les données pour obtenir seulement les stations avec une puissance nominale supérieure à 43
+    recharge_rapide = data[data['puissance_nominale'] > 43]
+
+    
+
+   
+
+    # Créer un diagramme à secteurs
+    fig, ax = plt.subplots()
+    labels = ['Recharge Rapide', 'Recharge Normale']
+    sizes = [len(recharge_rapide), total_stations - len(recharge_rapide)]
+    colors = ['green', 'red']
+    explode = (0.1, 0)  
+
+    ax.pie(sizes, explode=explode, labels=labels, colors=colors, autopct='%1.1f%%', shadow=True, startangle=90)
+    ax.axis('equal')  
+
+
+    st.markdown("<div style='text-align:center'><h3>Pourcentage de borne qui offrent la recherche rapide (>43 kw) </h3></div>", unsafe_allow_html=True)
+    st.pyplot(fig)
+
+
+##########################
+#VIZ 7
+
+    # Créer une ancre pour la Visualisation 7
+    st.markdown("<a name='vis7'></a>", unsafe_allow_html=True)   
+
     
     st.markdown("<div style='text-align:center'><h3>Trouver une borne dans une ville</h3></div>", unsafe_allow_html=True)
-    # User input for the town name
+
+    # User input pour la ville 
     town_name = st.text_input("Entre le nom de la ville:")
 
-    if town_name:  # Proceed only if a town name is entered
+    if town_name:  
         lat, lon = get_coordinates_from_town(town_name)
 
         if lat and lon:
-            # Filter data for stations in the selected town
+            # Filtrer les données
             stations_in_town = data[data['nom_station'].str.contains(town_name, case=False, na=False)]
 
-            # Create a map centered around the selected town
+            # Creer une carte sur la ville choisie
             town_map = folium.Map(location=[lat, lon], zoom_start=14)
 
-            # Add markers for each charging station in the town
+            # Ajouts des marquerus 
             for idx, row in stations_in_town.iterrows():
-                # Ensure the station has valid coordinate data
+                
                 if pd.notnull(row['consolidated_latitude']) and pd.notnull(row['consolidated_longitude']):
                     popup_text = f"Station: {row['nom_station']}, Implantation: {row['implantation_station']}"
                     folium.Marker(
@@ -302,7 +316,7 @@ def main():
                         popup=popup_text,
                     ).add_to(town_map)
 
-            # Display the map in Streamlit
+            
             
             folium_static(town_map)
         else:
