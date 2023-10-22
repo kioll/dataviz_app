@@ -11,3 +11,4 @@ geopandas
 geopy
 folium
 opencage
+streamlit-folium
