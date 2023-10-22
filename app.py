@@ -71,7 +71,7 @@ def main():
     button_css = """
     <style>
         .button-style {
-            background-color: #0000FF;
+            background-color: #1769FF;
             border: none;
             color: white;
             padding: 10px 20px;
