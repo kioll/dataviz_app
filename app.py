@@ -71,7 +71,7 @@ def main():
     button_css = """
     <style>
         .button-style {
-            background-color: #000000;
+            background-color: #0000FF;
             border: none;
             color: white;
             padding: 10px 20px;
@@ -99,7 +99,7 @@ def main():
     st.sidebar.markdown('<a href="#vis2" class="button-style">Repartition en fonction des départements</a>', unsafe_allow_html=True)
     st.sidebar.markdown('<a href="#vis3" class="button-style">Bornes gratuites ou payantes</a>', unsafe_allow_html=True)
     st.sidebar.markdown('<a href="#vis4" class="button-style">Quelles prises disponibles ?</a>', unsafe_allow_html=True)
-    st.sidebar.markdown('<a href="#vis5" class="button-style">Aller à la Visualisation 2</a>', unsafe_allow_html=True)
+    st.sidebar.markdown('<a href="#vis5" class="button-style">Trouver une borne</a>', unsafe_allow_html=True)
     st.sidebar.markdown('<a href="#vis6" class="button-style">Aller à la Visualisation 2</a>', unsafe_allow_html=True)
     # Séparation visuelle
     st.sidebar.markdown("---")
@@ -221,7 +221,6 @@ def main():
     # Compter le nombre de "True" pour chaque type de prise
     prise_counts = data[cols_to_clean].sum()
 
-   # Normalisation en pourcentage
 
     # Créer un graphique à barres
     fig = px.bar(x=cols_to_clean, y=prise_counts, labels={'x': 'Type de prise', 'y': 'Nombre de prises'},
