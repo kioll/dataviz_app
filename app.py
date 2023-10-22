@@ -75,8 +75,12 @@ def main():
     # Titre du menu
     st.sidebar.title("Menu")
 
-    st.sidebar.markdown('<a href="#vis1" class="button-style">Aller à la Visualisation 1</a>', unsafe_allow_html=True)
-    st.sidebar.markdown('<a href="#vis2" class="button-style">Aller à la Visualisation 2</a>', unsafe_allow_html=True)
+    st.sidebar.markdown('<a href="#vis1" class="button-style">Evolution du nombre de bornes</a>', unsafe_allow_html=True)
+    st.sidebar.markdown('<a href="#vis2" class="button-style">Repartition en fonction des départements</a>', unsafe_allow_html=True)
+    st.sidebar.markdown('<a href="#vis3" class="button-style">Bornes gratuites ou payantes</a>', unsafe_allow_html=True)
+    st.sidebar.markdown('<a href="#vis4" class="button-style">Quelles prises disponibles ?</a>', unsafe_allow_html=True)
+    st.sidebar.markdown('<a href="#vis5" class="button-style">Aller à la Visualisation 2</a>', unsafe_allow_html=True)
+    st.sidebar.markdown('<a href="#vis6" class="button-style">Aller à la Visualisation 2</a>', unsafe_allow_html=True)
     # Séparation visuelle
     st.sidebar.markdown("---")
 
@@ -153,6 +157,9 @@ def main():
 #############################################################
 
 #VIZ 3 
+    st.markdown("<a name='vis3'></a>", unsafe_allow_html=True)
+
+
     data['gratuit'] = data['gratuit'].astype(str).str.lower()
     data['gratuit'] = data['gratuit'].map({"true": True, "false": False})
     # Remplacer les valeurs NaN par False dans la colonne 'gratuit'
@@ -180,6 +187,7 @@ def main():
 ######################################
 
 #VIZ 4 
+    st.markdown("<a name='vis4'></a>", unsafe_allow_html=True)
 
 
  
