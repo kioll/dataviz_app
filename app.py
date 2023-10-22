@@ -71,9 +71,8 @@ def main():
     button_css = """
     <style>
         .button-style {
-            background-color: #1769FF;
+            background-color: #1769FF; /* couleur de fond du bouton */
             border: none;
-            color: white;
             padding: 10px 20px;
             text-align: center;
             text-decoration: none;
@@ -82,6 +81,10 @@ def main():
             margin: 4px 2px;
             cursor: pointer;
             border-radius: 12px;
+        }
+        .button-style a {
+            color: #000000; /* rend le texte du lien noir */
+            text-decoration: none; /* optionnel: supprime le soulignement */
         }
     </style>
     """
