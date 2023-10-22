@@ -39,7 +39,7 @@ def main():
     url = "https://static.data.gouv.fr/resources/fichier-consolide-des-bornes-de-recharge-pour-vehicules-electriques/20231022-065434/consolidation-etalab-schema-irve-statique-v-2.2.0-20231021.csv"
     data = load_data(url)
     
-    st.dataframe(data.head())
+    
     # Convertir la date en datetime 
     data['date_mise_en_service'] = pd.to_datetime(data['date_mise_en_service'])
 
