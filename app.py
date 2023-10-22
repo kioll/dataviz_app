@@ -71,8 +71,9 @@ def main():
     button_css = """
     <style>
         .button-style {
-            background-color: #1769FF; /* couleur de fond du bouton */
+            background-color: #1769FF;
             border: none;
+            color: white; /* Ici, la couleur initiale est blanche, mais sera écrasée pour les éléments <a> */
             padding: 10px 20px;
             text-align: center;
             text-decoration: none;
@@ -81,10 +82,14 @@ def main():
             margin: 4px 2px;
             cursor: pointer;
             border-radius: 12px;
+            -webkit-transition: background-color 0.2s; /* Transition optionnelle pour un changement de couleur fluide */
+            transition: background-color 0.2s; /* Transition optionnelle pour un changement de couleur fluide */
         }
-        .button-style a {
-            color: #000000; /* rend le texte du lien noir */
-            text-decoration: none; /* optionnel: supprime le soulignement */
+
+        /* Nouveau CSS pour cibler explicitement les éléments <a> */
+        a.button-style, a.button-style:link, a.button-style:visited, a.button-style:hover, a.button-style:active {
+            color: #000000; /* couleur du texte noir */
+            text-decoration: none; /* supprime le soulignement */
         }
     </style>
     """
@@ -102,8 +107,8 @@ def main():
     st.sidebar.markdown('<a href="#vis2" class="button-style">Repartition en fonction des départements</a>', unsafe_allow_html=True)
     st.sidebar.markdown('<a href="#vis3" class="button-style">Bornes gratuites ou payantes</a>', unsafe_allow_html=True)
     st.sidebar.markdown('<a href="#vis4" class="button-style">Quelles prises disponibles ?</a>', unsafe_allow_html=True)
-    st.sidebar.markdown('<a href="#vis5" class="button-style">Trouver une borne</a>', unsafe_allow_html=True)
-    st.sidebar.markdown('<a href="#vis6" class="button-style">Aller à la Visualisation 2</a>', unsafe_allow_html=True)
+    st.sidebar.markdown('<a href="#vis5" class="button-style">Ou sont implanter les bornes</a>', unsafe_allow_html=True)
+    st.sidebar.markdown('<a href="#vis6" class="button-style">Trouver une borne</a>', unsafe_allow_html=True)
     # Séparation visuelle
     st.sidebar.markdown("---")
 
@@ -234,11 +239,38 @@ def main():
 
 
 ##########################
+#VIZ 5 
+
+    
+
+    # Création du graphique en utilisant seaborn
+    plt.figure(figsize=(10, 6))  # Vous pouvez ajuster la taille comme vous le souhaitez
+    sns.countplot(x='implantation_station', data=data, palette='viridis')  # Vous pouvez choisir une autre palette de couleurs
+
+    plt.title('Nombre de stations par type d\'implantation')
+    plt.xlabel('Type d\'Implantation')
+    plt.ylabel('Nombre de Stations')
+
+    # Pour améliorer l'affichage et éviter le chevauchement des noms de catégories (si nécessaire)
+    plt.xticks(rotation=45)  
+
+    # Affichage du graphique dans Streamlit
+    st.pyplot(plt)
+
+
+
+
+##########################
+#VIZ 6
+
+    # Créer une ancre pour la Visualisation 6
+    st.markdown("<a name='vis6'></a>", unsafe_allow_html=True)   
+
     # Section for selecting a town and displaying charging stations
-    st.subheader("Find Charging Stations in a Town")
+    st.subheader("Trouver une borne dans une ville")
 
     # User input for the town name
-    town_name = st.text_input("Enter the name of the town:")
+    town_name = st.text_input("Entre le nom de la ville:")
 
     if town_name:  # Proceed only if a town name is entered
         lat, lon = get_coordinates_from_town(town_name)
@@ -254,7 +286,7 @@ def main():
             for idx, row in stations_in_town.iterrows():
                 # Ensure the station has valid coordinate data
                 if pd.notnull(row['consolidated_latitude']) and pd.notnull(row['consolidated_longitude']):
-                    popup_text = f"Station: {row['nom_station']}"
+                    popup_text = f"Station: {row['nom_station']}, Implantation: {row['implantation_station']}"
                     folium.Marker(
                         location=[row['consolidated_latitude'], row['consolidated_longitude']],
                         popup=popup_text,
@@ -263,7 +295,7 @@ def main():
             # Display the map in Streamlit
             folium_static(town_map)
         else:
-            st.error("Could not find the town or retrieve its coordinates.")
+            st.error("Pas trouver la ville")
     
 
 
