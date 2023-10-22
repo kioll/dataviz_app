@@ -53,7 +53,14 @@ def get_coordinates_from_town(town_name):
 def main():
     
 
-    st.title("Power Juice")
+    st.markdown("""
+        <div style='text-align:center'>
+            <h1>
+                <img src='https://img.freepik.com/vecteurs-premium/modele-conception-logo-batterie-alimentation-conception-du-logo-charge-rapide-batterie_617472-123.jpg' alt='Logo' style='width:50px; vertical-align: middle;'>
+                Power Juice
+            </h1>
+        </div>
+    """, unsafe_allow_html=True)
 
     # Charger les données
     url = "https://static.data.gouv.fr/resources/fichier-consolide-des-bornes-de-recharge-pour-vehicules-electriques/20231022-065434/consolidation-etalab-schema-irve-statique-v-2.2.0-20231021.csv"
@@ -178,7 +185,8 @@ def main():
 
     fig, ax = plt.subplots(1, 1, figsize=(10, 10))
     merged.plot(column='nb_bornes', ax=ax, legend=True, cmap="YlGnBu", alpha=1,edgecolor='0.8')
-    plt.title('Nombre de bornes de recharge par département')
+    st.markdown("<div style='text-align:center'><h3>Nombre de bornes de recharge par département</h3></div>", unsafe_allow_html=True)
+    
     st.pyplot(fig)
 
 
@@ -206,9 +214,10 @@ def main():
     })
 
     # Créer le pie chart avec Plotly
-    fig = px.pie(df_pie, values='Nombre de bornes', names='Type', title="Répartition des bornes gratuites et payantes")
+    fig = px.pie(df_pie, values='Nombre de bornes', names='Type')
 
     # Afficher le graphique avec Streamlit
+    st.markdown("<div style='text-align:center'><h3>Répartition des bornes gratuites et payantes</h3></div>", unsafe_allow_html=True)
     st.plotly_chart(fig)
 
 
@@ -232,9 +241,10 @@ def main():
 
     # Créer un graphique à barres
     fig = px.bar(x=cols_to_clean, y=prise_counts, labels={'x': 'Type de prise', 'y': 'Nombre de prises'},
-                title='Comparaison des types de prises sur les bornes')
+                )
 
     # Afficher le graphique dans Streamlit
+    st.markdown("<div style='text-align:center'><h3>Comparaison des types de prises sur les bornes</h3></div>", unsafe_allow_html=True)
     st.plotly_chart(fig)
 
 
@@ -247,7 +257,7 @@ def main():
     plt.figure(figsize=(10, 6))  # Vous pouvez ajuster la taille comme vous le souhaitez
     sns.countplot(x='implantation_station', data=data, palette='viridis')  # Vous pouvez choisir une autre palette de couleurs
 
-    plt.title('Nombre de stations par type d\'implantation')
+    
     plt.xlabel('Type d\'Implantation')
     plt.ylabel('Nombre de Stations')
 
@@ -255,6 +265,7 @@ def main():
     plt.xticks(rotation=45)  
 
     # Affichage du graphique dans Streamlit
+    st.markdown("<div style='text-align:center'><h3>Comparaison des types de prises sur les bornes</h3></div>", unsafe_allow_html=True)
     st.pyplot(plt)
 
 
@@ -266,9 +277,8 @@ def main():
     # Créer une ancre pour la Visualisation 6
     st.markdown("<a name='vis6'></a>", unsafe_allow_html=True)   
 
-    # Section for selecting a town and displaying charging stations
-    st.subheader("Trouver une borne dans une ville")
-
+    
+    st.markdown("<div style='text-align:center'><h3>Trouver une borne dans une ville</h3></div>", unsafe_allow_html=True)
     # User input for the town name
     town_name = st.text_input("Entre le nom de la ville:")
 
@@ -293,6 +303,7 @@ def main():
                     ).add_to(town_map)
 
             # Display the map in Streamlit
+            
             folium_static(town_map)
         else:
             st.error("Pas trouver la ville")
