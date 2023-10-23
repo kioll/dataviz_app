@@ -95,7 +95,7 @@ def main():
 
         
         a.button-style, a.button-style:link, a.button-style:visited, a.button-style:hover, a.button-style:active {
-            color: #000000;
+            color: #FFFFFF;
             text-decoration: none; 
         }
     </style>
