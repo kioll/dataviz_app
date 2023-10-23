@@ -89,8 +89,8 @@ def main():
             border-radius: 12px;
             -webkit-transition: background-color 0.2s; 
             transition: background-color 0.2s;
-            width: 150px; 
-            height: 50px; 
+            width: 300px; 
+            height: 80px; 
         }
 
         
