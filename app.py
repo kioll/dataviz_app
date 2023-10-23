@@ -160,7 +160,7 @@ def main():
     # Créer une ancre pour la Visualisation 2
     st.markdown("<a name='vis2'></a>", unsafe_allow_html=True)
 
-data['année'] = data['date_mise_en_service'].dt.year
+    data['année'] = data['date_mise_en_service'].dt.year
 
     # Filtrer pour prendre seulement les données à partir de 2015
     df_filtré = data[data['année'] >= 2015]
