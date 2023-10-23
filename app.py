@@ -59,7 +59,9 @@ def main():
             </h1>
         </div>
     """, unsafe_allow_html=True)
-       
+
+    
+    st.markdown("<div style='text-align:center'><h2>Vous souhaitez acheter un véhiculé électrique mais qu'en est il des bornes de recharge? </h2></div>", unsafe_allow_html=True)  
 
     # Charger les données
     url = "https://static.data.gouv.fr/resources/fichier-consolide-des-bornes-de-recharge-pour-vehicules-electriques/20231022-065434/consolidation-etalab-schema-irve-statique-v-2.2.0-20231021.csv"
