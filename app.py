@@ -169,7 +169,7 @@ def main():
 
     merged = france_map.set_index('code').join(borne_count_by_departement.set_index('departement'))
 
-    fig, ax = plt.subplots(1, 1, figsize=(10, 10))
+    fig, ax = sns.subplots(1, 1, figsize=(10, 10))
     merged.plot(column='nb_bornes', ax=ax, legend=True, cmap="YlGnBu", alpha=1,edgecolor='0.8')
     st.markdown("<div style='text-align:center'><h3>Nombre de bornes de recharge par département</h3></div>", unsafe_allow_html=True)
     
