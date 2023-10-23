@@ -133,9 +133,34 @@ def main():
 
      # Créer une ancre pour la Visualisation 1
     st.markdown("<a name='vis1'></a>", unsafe_allow_html=True)   
+
+        # Charger les frontières des départements français
+    france_map = gpd.read_file("departements.geojson")
+
+    data['departement'] = data['consolidated_code_postal'].astype(str).str[:2]
+    borne_count_by_departement = data.groupby('departement').size().reset_index(name='nb_bornes')
+
+    merged = france_map.set_index('code').join(borne_count_by_departement.set_index('departement'))
+
+    fig, ax = plt.subplots(1, 1, figsize=(10, 10))
+    merged.plot(column='nb_bornes', ax=ax, legend=True, cmap="YlGnBu", alpha=1,edgecolor='0.8')
+    st.markdown("<div style='text-align:center'><h3>Nombre de bornes de recharge par département</h3></div>", unsafe_allow_html=True)
+    
+    st.pyplot(fig)
+
     
     
-    data['année'] = data['date_mise_en_service'].dt.year
+    
+
+###########################################################
+
+#VIZ 2  
+   
+
+    # Créer une ancre pour la Visualisation 2
+    st.markdown("<a name='vis2'></a>", unsafe_allow_html=True)
+
+data['année'] = data['date_mise_en_service'].dt.year
 
     # Filtrer pour prendre seulement les données à partir de 2015
     df_filtré = data[data['année'] >= 2015]
@@ -150,30 +175,6 @@ def main():
     st.markdown("<div style='text-align:center'><h3>Évolution du nombre de bornes de recharge</h3></div>", unsafe_allow_html=True)
     st.line_chart(bornes_cumulées, use_container_width=True)
     
-    
-
-###########################################################
-
-#VIZ 2  
-   
-
-    # Créer une ancre pour la Visualisation 2
-    st.markdown("<a name='vis2'></a>", unsafe_allow_html=True)
-
-
-    # Charger les frontières des départements français
-    france_map = gpd.read_file("departements.geojson")
-
-    data['departement'] = data['consolidated_code_postal'].astype(str).str[:2]
-    borne_count_by_departement = data.groupby('departement').size().reset_index(name='nb_bornes')
-
-    merged = france_map.set_index('code').join(borne_count_by_departement.set_index('departement'))
-
-    fig, ax = plt.subplots(1, 1, figsize=(10, 10))
-    merged.plot(column='nb_bornes', ax=ax, legend=True, cmap="YlGnBu", alpha=1,edgecolor='0.8')
-    st.markdown("<div style='text-align:center'><h3>Nombre de bornes de recharge par département</h3></div>", unsafe_allow_html=True)
-    
-    st.pyplot(fig)
 
 
 #############################################################
