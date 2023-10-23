@@ -90,7 +90,7 @@ def main():
             -webkit-transition: background-color 0.2s; 
             transition: background-color 0.2s;
             width: 300px; 
-            height: 80px; 
+            height: 50px; 
         }
 
         
